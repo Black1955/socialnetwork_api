@@ -2,9 +2,9 @@ import pool from "../db.js";
 import bccrypt from "bcrypt";
 import tokenService from "../services/token.service.js";
 import fileService from "../services/file.service.js";
-
+import { ApiError } from "../services/error.service.js";
 class userController {
-  async signin(req, res) {
+  async signin(req, res, next) {
     const { password, email } = req.body;
     try {
       const passwordq = await pool.query(
@@ -24,16 +24,13 @@ class userController {
           return res.json({ access: true });
         }
       } else {
-        res
-          .status(401)
-          .json({ access: false, massage: "uncorrect password or email" });
-        return;
+        next(ApiError.BadRequest("uncorrect password or email"));
       }
     } catch (error) {
-      console.log(error);
+      next(ApiError.BadRequest("uncorrect password or email"));
     }
   }
-  async signup(req, res) {
+  async signup(req, res, next) {
     const { password, email, nickname } = req.body;
     try {
       const isSignup = await pool.query(
@@ -41,7 +38,7 @@ class userController {
         [email]
       );
       if (isSignup.rows.length) {
-        throw new Error("the user is already existed");
+        next(ApiError.BadRequest("the user is already existed"));
       } else {
         const newpassword = await bccrypt.hash(password, 5);
         const id = await pool.query(
@@ -56,16 +53,32 @@ class userController {
       }
     } catch (error) {
       console.log(error);
-      return res.json({ access: false, massage: error });
+      next(ApiError.BadRequest(error.massage));
     }
   }
-
+  async refresch(req, res, next) {
+    const id = tokenService.returnPayload(req.cookies.token);
+    try {
+      const profile = await pool.query(
+        "SELECT id, nickname, name, description, followers, following, avatar_url, back_url, email FROM users WHERE id = $1",
+        [id]
+      );
+      const token = tokenService.createToken(id);
+      res.cookie("token", token, {
+        httpOnly: true,
+      });
+      return res.json(profile.rows[0]);
+    } catch (error) {
+      next(ApiError.BadRequest(error.massage));
+    }
+  }
   async getUser(req, res) {
-    const nickname = req.params.nickname;
+    const userId = req.params.id;
+    console.log(req.params);
     try {
       const data = await pool.query(
-        "SELECT id, nickname, name, description, followers, following, avatar_url, back_url, email FROM users WHERE nickname = $1",
-        [nickname]
+        "SELECT id, nickname, name, description, followers, following, avatar_url, back_url, email FROM users WHERE id = $1",
+        [userId]
       );
       if (!data.rows.length) {
         res.json({ error: "user doesn`t exist" });

@@ -6,7 +6,8 @@ export const userRouter = Router();
 
 userRouter.post("/signin", userController.signin);
 userRouter.post("/signup", userController.signup);
-userRouter.get("/getuser/:nickname", tokenMiddleware, userController.getUser);
+userRouter.get("/refresh", tokenMiddleware, userController.refresch);
+userRouter.get("/getuser/:id", tokenMiddleware, userController.getUser);
 userRouter.post("/subscribe", tokenMiddleware, userController.SubscribeUser);
 userRouter.post(
   "/unsubscribe",
@@ -31,4 +32,9 @@ userRouter.put(
   tokenMiddleware,
   upload.fields([{ name: "avatar" }, { name: "background" }]),
   userController.updateProfile
+);
+userRouter.get(
+  "/recomenduser/:userId",
+  tokenMiddleware,
+  userController.getRecomendUser
 );

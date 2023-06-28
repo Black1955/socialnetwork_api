@@ -3,7 +3,7 @@ import "dotenv/config";
 class tokenService {
   createToken(payload) {
     const token = jsonwebtoken.sign({ payload }, process.env.FRASE, {
-      expiresIn: "10s",
+      expiresIn: "10m",
     });
     return token;
   }
