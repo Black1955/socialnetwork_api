@@ -40,6 +40,7 @@ class PostContorller {
   async getRecomendedPosts(req, res) {
     try {
       const { id } = req.params;
+      const myId = tokenService.returnPayload(req.cookies.token);
       const { page, limit, type } = req.query;
       let data;
       switch (type) {
@@ -51,29 +52,35 @@ class PostContorller {
           ]);
           return res.json(data.rows);
         case "liked":
-          data = await pool.query("SELECT * FROM likedPosts($1,$2,$3)", [
+          data = await pool.query("SELECT * FROM likedPosts($1,$2,$3,$4)", [
             id,
+            myId,
             limit,
             page,
           ]);
           return res.json(data.rows);
         case "popular":
-          data = await pool.query(
-            "SELECT * FROM (SELECT * FROM posts ORDER BY likes DESC) AS sortedPosts LIMIT $1 OFFSET $2",
-            [limit, page]
-          );
+          data = await pool.query("select * from popularblog($1,$2,$3)", [
+            myId,
+            limit,
+            page,
+          ]);
           return res.json(data.rows);
         case "new":
-          data = await pool.query(
-            "SELECT * FROM (SELECT * FROM posts ORDER BY time DESC) AS sortedPosts LIMIT $1 OFFSET $2",
-            [limit, page]
-          );
+          data = await pool.query("SELECT * from newposts($1,$2,$3,$4)", [
+            id,
+            myId,
+            limit,
+            page,
+          ]);
           return res.json(data.rows);
         case "blog":
-          data = await pool.query(
-            "SELECT * FROM (SELECT * FROM posts WHERE user_id = $1 ORDER BY time DESC) AS userPosts LIMIT $2 OFFSET $3",
-            [id, limit, page]
-          );
+          data = await pool.query("SELECT * FROM blogposts($1,$2,$3,$4)", [
+            id,
+            myId,
+            limit,
+            page,
+          ]);
           return res.json(data.rows);
         default:
           return res.json({ massage: "incorrect type of query" });
@@ -85,13 +92,17 @@ class PostContorller {
   }
   async likePost(req, res) {
     const id = tokenService.returnPayload(req.cookies.token);
-    const { postId } = req.query;
+    const { post_id } = req.body;
     try {
-      await pool.query("INSERT INTO likes (user_id,post_id) values ($1,$2) ", [
+      await pool.query("INSERT INTO likes (user_id,post_id) values ($1,$2)", [
         id,
-        postId,
+        post_id,
       ]);
-      return res.sendStatus(200);
+      const post = await pool.query(
+        "select count(*) as likes from likes where post_id = $1",
+        [post_id]
+      );
+      return res.json(post.rows[0]);
     } catch (error) {
       console.log(error);
       return res.json(error);
@@ -99,13 +110,17 @@ class PostContorller {
   }
   async dislikePost(req, res) {
     const id = tokenService.returnPayload(req.cookies.token);
-    const { postId } = req.query;
+    const { post_id } = req.body;
     try {
       await pool.query(
         "DELETE FROM likes WHERE user_id = $1 AND post_id = $2 ",
-        [id, postId]
+        [id, post_id]
       );
-      return res.sendStatus(200);
+      const post = await pool.query(
+        "select count(*) as likes from likes where post_id = $1",
+        [post_id]
+      );
+      return res.json(post.rows[0]);
     } catch (error) {
       return res.json(error);
     }

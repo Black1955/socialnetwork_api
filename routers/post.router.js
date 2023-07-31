@@ -15,11 +15,5 @@ postRouter.get(
   tokenMiddleware,
   PostContorller.getRecomendedPosts
 );
-postRouter.get("/like", tokenMiddleware, PostContorller.likePost);
-postRouter.get("/dislike", tokenMiddleware, PostContorller.dislikePost);
-postRouter.post(
-  "/upload",
-  tokenMiddleware,
-  upload.fields([{ name: "avatar" }, { name: "background" }]),
-  PostContorller.upload
-);
+postRouter.post("/like", tokenMiddleware, PostContorller.likePost);
+postRouter.post("/dislike", tokenMiddleware, PostContorller.dislikePost);

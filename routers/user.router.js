@@ -14,17 +14,11 @@ userRouter.post(
   tokenMiddleware,
   userController.unSubscribeUser
 );
-userRouter.post(
-  "/setavatar",
+userRouter.put(
+  "/setphoto",
   tokenMiddleware,
-  upload.single("avatar"),
-  userController.setAvatar
-);
-userRouter.post(
-  "/setback",
-  tokenMiddleware,
-  upload.single("background"),
-  userController.setBackFoto
+  upload.fields([{ name: "avatar" }, { name: "background" }]),
+  userController.setPhoto
 );
 userRouter.get("/search", tokenMiddleware, userController.searchUsers);
 userRouter.put(

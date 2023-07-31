@@ -22,6 +22,8 @@ class userController {
             httpOnly: true,
           });
           return res.json({ access: true });
+        } else {
+          next(ApiError.BadRequest("uncorrect password or email"));
         }
       } else {
         next(ApiError.BadRequest("uncorrect password or email"));
@@ -97,12 +99,13 @@ class userController {
     }
   }
   async SubscribeUser(req, res) {
-    const { targetId } = req.body;
+    const { id } = req.body;
+    console.log(id);
     const userId = tokenService.returnPayload(req.cookies.token);
     try {
       await pool.query(
         "INSERT INTO follows (subscriber_id,target_user_id) values ($1,$2)",
-        [userId, targetId]
+        [userId, id]
       );
       res.sendStatus(200);
     } catch (error) {
@@ -110,12 +113,12 @@ class userController {
     }
   }
   async unSubscribeUser(req, res) {
-    const { targetId } = req.body;
+    const { id } = req.body;
     const userId = tokenService.returnPayload(req.cookies.token);
     try {
       await pool.query(
         "DELETE FROM follows WHERE subscriber_id = $1 AND target_user_id = $2",
-        [userId, targetId]
+        [userId, id]
       );
       res.sendStatus(200);
     } catch (error) {
@@ -142,6 +145,7 @@ class userController {
     const updateFields = [];
     if (req.files) {
       if (req.files.avatar) {
+        console.log("oleg");
         await fileService.setFile(
           id,
           req.files.avatar[0],
@@ -150,7 +154,12 @@ class userController {
         );
       }
       if (req.files.background) {
-        await fileService.setFile(id, req.files.avatar[0], "users", "back_url");
+        await fileService.setFile(
+          id,
+          req.files.background[0],
+          "users",
+          "back_url"
+        );
       }
     }
     if (description) {
@@ -179,35 +188,22 @@ class userController {
     ]);
     res.json(response.rows[0]);
   }
-  async setAvatar(req, res) {
+  async setPhoto(req, res) {
     const id = tokenService.returnPayload(req.cookies.token);
+    const { type } = req.body;
+    console.log(type);
+    console.log(req.files);
+    console.log(req.file);
     try {
-      if (req.file) {
+      if (req.files) {
         const response = await fileService.setFile(
           id,
-          req.file,
+          req.files[type === "avatar_url" ? "avatar" : "background"][0],
           "users",
-          "avatar_url"
+          type
         );
         res.json(response.rows[0]);
-      }
-    } catch (error) {
-      console.log(error);
-      return res.json(error);
-    }
-  }
-  async setBackFoto(req, res) {
-    const id = tokenService.returnPayload(req.cookies.token);
-    try {
-      if (req.file) {
-        const response = await fileService.setFile(
-          id,
-          req.file,
-          "users",
-          "back_url"
-        );
-        res.json(response.rows[0]);
-      }
+      } else res.json("nixau");
     } catch (error) {
       console.log(error);
       return res.json(error);
@@ -218,7 +214,7 @@ class userController {
       const { query } = req.query;
       if (query.length) {
         const data = await pool.query(
-          `SELECT nickname,avatar_url,id,description FROM users WHERE LOWER(nickname) LIKE '${query}%' OR LOWER(name) LIKE '${query}%'`
+          `SELECT nickname,avatar_url,id FROM users WHERE LOWER(nickname) LIKE '${query}%' OR LOWER(name) LIKE '${query}%'`
         );
         return res.json(data.rows);
       } else {
