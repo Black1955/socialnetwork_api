@@ -11,7 +11,7 @@ import { errorMiddleware } from "./middlewares/error.middleware.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const app = express();
-const port = process.env.SERVER_PORT || 5000;
+const port = process.env.PORT || 5000;
 app.use(
   cors({
     credentials: true,
