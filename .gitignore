@@ -1,5 +1,5 @@
 /node_modules
 .env
-/imgStorage
+imgStorage/*
 postgres.sql
 .vscode
