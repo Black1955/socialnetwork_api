@@ -6,30 +6,27 @@ import { ApiError } from "../services/error.service.js";
 class userController {
   async signin(req, res, next) {
     const { password, email } = req.body;
-    try {
-      const passwordq = await pool.query(
-        "SELECT password, id FROM users WHERE email = $1",
-        [email]
+
+    const passwordq = await pool.query(
+      "SELECT password, id FROM users WHERE email = $1",
+      [email]
+    );
+    res.json(passwordq.rows);
+    if (passwordq.rows.length) {
+      const checkpassword = bccrypt.compareSync(
+        password,
+        passwordq.rows[0].password
       );
-      res.json(passwordq.rows);
-      if (passwordq.rows.length) {
-        const checkpassword = bccrypt.compareSync(
-          password,
-          passwordq.rows[0].password
-        );
-        if (checkpassword) {
-          const token = tokenService.createToken(passwordq.rows[0].id);
-          res.cookie("token", token, {
-            httpOnly: true,
-          });
-          return res.json({ access: true });
-        } else {
-          next(ApiError.BadRequest("uncorrect password or email"));
-        }
+      if (checkpassword) {
+        const token = tokenService.createToken(passwordq.rows[0].id);
+        res.cookie("token", token, {
+          httpOnly: true,
+        });
+        return res.json({ access: true });
       } else {
         next(ApiError.BadRequest("uncorrect password or email"));
       }
-    } catch (error) {
+    } else {
       next(ApiError.BadRequest("uncorrect password or email"));
     }
   }
