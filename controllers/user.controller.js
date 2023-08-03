@@ -21,7 +21,6 @@ class userController {
           const token = tokenService.createToken(passwordq.rows[0].id);
           res.cookie("token", token, {
             httpOnly: true,
-            domain: "https://sw-omega.vercel.app",
           });
           return res.json({ access: true });
         } else {
@@ -70,7 +69,6 @@ class userController {
       const token = tokenService.createToken(id);
       res.cookie("token", token, {
         httpOnly: true,
-        domain: "https://sw-omega.vercel.app",
       });
       return res.json(profile.rows[0]);
     } catch (error) {
