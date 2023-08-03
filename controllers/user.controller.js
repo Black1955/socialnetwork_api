@@ -6,28 +6,32 @@ import { ApiError } from "../services/error.service.js";
 class userController {
   async signin(req, res, next) {
     const { password, email } = req.body;
-
-    const passwordq = await pool.query(
-      "SELECT password, id FROM users WHERE email = $1",
-      [email]
-    );
-    return res.json(passwordq.rows);
-    if (passwordq.rows.length) {
-      const checkpassword = bccrypt.compareSync(
-        password,
-        passwordq.rows[0].password
+    let pass;
+    try {
+      const passwordq = await pool.query(
+        "SELECT password, id FROM users WHERE email = $1",
+        [email]
       );
-      if (checkpassword) {
-        const token = tokenService.createToken(passwordq.rows[0].id);
-        res.cookie("token", token, {
-          httpOnly: true,
-        });
-        return res.json({ access: true });
+      pass = passwordq;
+      if (passwordq.rows.length) {
+        const checkpassword = bccrypt.compareSync(
+          password,
+          passwordq.rows[0].password
+        );
+        if (checkpassword) {
+          const token = tokenService.createToken(passwordq.rows[0].id);
+          res.cookie("token", token, {
+            httpOnly: true,
+          });
+          return res.json({ access: true });
+        } else {
+          next(ApiError.BadRequest("uncorrect password or email"));
+        }
       } else {
         next(ApiError.BadRequest("uncorrect password or email"));
       }
-    } else {
-      next(ApiError.BadRequest("uncorrect password or email"));
+    } catch (error) {
+      next(ApiError.BadRequest(JSON.stringify(pass)));
     }
   }
   async signup(req, res, next) {
@@ -37,7 +41,6 @@ class userController {
         "SELECT email FROM users WHERE email = $1",
         [email]
       );
-      res.json(isSignup.rows);
       if (isSignup.rows.length) {
         next(ApiError.BadRequest("the user is already existed"));
       } else {
