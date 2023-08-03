@@ -15,7 +15,7 @@ const port = process.env.PORT || 5000;
 app.use(
   cors({
     credentials: true,
-    origin: process.env.ORIGIN,
+    origin: "https://sw-omega.vercel.app",
   })
 );
 app.use(json());

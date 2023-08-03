@@ -3,11 +3,11 @@ import "dotenv/config";
 const { Pool } = pkg;
 
 const pool = new Pool({
-  user: process.env.USER_DB,
-  password: process.env.PASSWORD_DB,
-  host: process.env.HOST_DB,
-  port: process.env.PORT_DB,
-  database: process.env.DATABASE,
+  user: "postgres",
+  password: "qwerty123228",
+  host: "socialnetwork.cued79adgtez.eu-north-1.rds.amazonaws.com",
+  port: "5432",
+  database: "socialnetwork",
 });
 
 export default pool;
