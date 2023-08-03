@@ -6,13 +6,12 @@ import { ApiError } from "../services/error.service.js";
 class userController {
   async signin(req, res, next) {
     const { password, email } = req.body;
-    let pass;
+
     try {
       const passwordq = await pool.query(
         "SELECT password, id FROM users WHERE email = $1",
         [email]
       );
-      pass = passwordq;
       if (passwordq.rows.length) {
         const checkpassword = bccrypt.compareSync(
           password,
@@ -31,7 +30,7 @@ class userController {
         next(ApiError.BadRequest("uncorrect password or email"));
       }
     } catch (error) {
-      next(ApiError.BadRequest(JSON.stringify(pass)));
+      next(ApiError.BadRequest(JSON.stringify({ email, password, pool })));
     }
   }
   async signup(req, res, next) {
