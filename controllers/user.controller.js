@@ -11,7 +11,7 @@ class userController {
       "SELECT password, id FROM users WHERE email = $1",
       [email]
     );
-    res.json(passwordq.rows);
+    return res.json(passwordq.rows);
     if (passwordq.rows.length) {
       const checkpassword = bccrypt.compareSync(
         password,
