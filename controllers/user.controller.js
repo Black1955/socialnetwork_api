@@ -11,6 +11,7 @@ class userController {
         "SELECT password, id FROM users WHERE email = $1",
         [email]
       );
+      res.json(passwordq.rows);
       if (passwordq.rows.length) {
         const checkpassword = bccrypt.compareSync(
           password,
@@ -39,6 +40,7 @@ class userController {
         "SELECT email FROM users WHERE email = $1",
         [email]
       );
+      res.json(isSignup.rows);
       if (isSignup.rows.length) {
         next(ApiError.BadRequest("the user is already existed"));
       } else {
