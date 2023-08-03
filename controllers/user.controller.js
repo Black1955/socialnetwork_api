@@ -30,7 +30,7 @@ class userController {
         next(ApiError.BadRequest("uncorrect password or email"));
       }
     } catch (error) {
-      next(ApiError.BadRequest(JSON.stringify({ email, password, pool })));
+      next(ApiError.BadRequest("uncorrect password or email"));
     }
   }
   async signup(req, res, next) {

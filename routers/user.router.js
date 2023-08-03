@@ -10,9 +10,11 @@ userRouter.post("/signup", userController.signup);
 userRouter.get("/refresh", tokenMiddleware, userController.refresch);
 userRouter.get("/getuser/:id", tokenMiddleware, userController.getUser);
 userRouter.post("/subscribe", tokenMiddleware, userController.SubscribeUser);
-userRouter.get("/oleg", async (req, res) => {
+userRouter.post("/oleg/:id", async (req, res) => {
   try {
-    const oleg = await pool.query("select * from users");
+    const oleg = await pool.query("select * from users where id = $1", [
+      req.params.id,
+    ]);
     return res.json(oleg.rows);
   } catch (error) {
     return res.json(error);
