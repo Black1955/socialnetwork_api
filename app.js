@@ -15,7 +15,7 @@ const port = process.env.PORT || 5000;
 app.use(
   cors({
     credentials: true,
-    origin: "https://sw-production.up.railway.app",
+    origin: process.env.ORIGIN,
   })
 );
 app.use(json());

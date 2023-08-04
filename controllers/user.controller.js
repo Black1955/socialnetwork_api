@@ -6,7 +6,7 @@ import { ApiError } from "../services/error.service.js";
 class userController {
   async signin(req, res, next) {
     const { password, email } = req.body;
-
+    console.log("oleg");
     try {
       const passwordq = await pool.query(
         "SELECT password, id FROM users WHERE email = $1",
