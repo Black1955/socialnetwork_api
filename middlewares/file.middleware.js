@@ -12,7 +12,7 @@ const storage = multer.diskStorage({
         "-" +
         file.fieldname +
         "-" +
-        tokenService.returnPayload(req.cookies.token) +
+        tokenService.returnPayload(req.headers.authorization) +
         type
     );
   },

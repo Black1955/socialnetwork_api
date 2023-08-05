@@ -18,8 +18,7 @@ class PostContorller {
     }
   }
   async CreateuserPost(req, res) {
-    const { token } = req.cookies;
-    const id = tokenService.returnPayload(token);
+    const id = tokenService.returnPayload(req.headers.authorization);
     const { title, description } = req.body;
     const file = req.file ? req.file.path : null;
     try {
@@ -40,7 +39,7 @@ class PostContorller {
   async getRecomendedPosts(req, res) {
     try {
       const { id } = req.params;
-      const myId = tokenService.returnPayload(req.cookies.token);
+      const myId = tokenService.returnPayload(req.headers.authorization);
       const { page, limit, type } = req.query;
       let data;
       switch (type) {
@@ -91,7 +90,7 @@ class PostContorller {
     }
   }
   async likePost(req, res) {
-    const id = tokenService.returnPayload(req.cookies.token);
+    const id = tokenService.returnPayload(req.headers.authorization);
     const { post_id } = req.body;
     try {
       await pool.query("INSERT INTO likes (user_id,post_id) values ($1,$2)", [
@@ -109,7 +108,7 @@ class PostContorller {
     }
   }
   async dislikePost(req, res) {
-    const id = tokenService.returnPayload(req.cookies.token);
+    const id = tokenService.returnPayload(req.headers.authorization);
     const { post_id } = req.body;
     try {
       await pool.query(

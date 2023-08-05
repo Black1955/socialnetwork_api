@@ -3,7 +3,7 @@ import tokenService from "../services/token.service.js";
 
 class petController {
   async createPet(req, res) {
-    const id = tokenService.returnPayload(req.cookies.token);
+    const id = tokenService.returnPayload(req.headers.authorization);
     let path = null;
     try {
       const { name } = req.body;

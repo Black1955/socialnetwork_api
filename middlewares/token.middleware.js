@@ -3,10 +3,8 @@ import "dotenv/config";
 import { ApiError } from "../services/error.service.js";
 export default function tokenMiddleware(req, res, next) {
   try {
-    const { token } = req.cookies;
+    const token = req.headers.authorization;
     if (!token) {
-      res.clearCookie("token", { secure: true });
-      // res.json({ access: false, massage: "unvalid token" });
       return next(ApiError.UnautorizedError());
     }
     const user = jsonwebtoken.verify(token, process.env.FRASE);
@@ -14,7 +12,7 @@ export default function tokenMiddleware(req, res, next) {
     next();
   } catch (error) {
     console.log(error);
-    res.clearCookie("token", { secure: true });
+
     return next(ApiError.UnautorizedError());
   }
 }

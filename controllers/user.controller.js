@@ -6,7 +6,6 @@ import { ApiError } from "../services/error.service.js";
 class userController {
   async signin(req, res, next) {
     const { password, email } = req.body;
-    console.log("oleg");
     try {
       const passwordq = await pool.query(
         "SELECT password, id FROM users WHERE email = $1",
@@ -19,10 +18,10 @@ class userController {
         );
         if (checkpassword) {
           const token = tokenService.createToken(passwordq.rows[0].id);
-          res.cookie("token", token, {
-            httpOnly: true,
-          });
-          return res.json({ access: true });
+          // res.cookie("token", token, {
+          //   httpOnly: true,
+          // });
+          return res.json({ access: true, token });
         } else {
           next(ApiError.BadRequest("uncorrect password or email"));
         }
@@ -60,24 +59,20 @@ class userController {
     }
   }
   async refresch(req, res, next) {
-    const id = tokenService.returnPayload(req.cookies.token);
+    const id = tokenService.returnPayload(req.headers.authorization);
     try {
       const profile = await pool.query(
         "SELECT id, nickname, name, description, followers, following, avatar_url, back_url, email FROM users WHERE id = $1",
         [id]
       );
       const token = tokenService.createToken(id);
-      res.cookie("token", token, {
-        httpOnly: true,
-      });
-      return res.json(profile.rows[0]);
+      return res.json({ user: profile.rows[0], token });
     } catch (error) {
       next(ApiError.BadRequest(error.massage));
     }
   }
   async getUser(req, res) {
     const userId = req.params.id;
-    console.log(req.params);
     try {
       const data = await pool.query(
         "SELECT id, nickname, name, description, followers, following, avatar_url, back_url, email FROM users WHERE id = $1",
@@ -88,7 +83,7 @@ class userController {
         return;
       }
       const id = data.rows[0].id;
-      const jwtid = tokenService.returnPayload(req.cookies.token);
+      const jwtid = tokenService.returnPayload(req.headers.authorization);
       const checkfollow = await pool.query(
         "SELECT EXISTS (SELECT * FROM follows WHERE subscriber_id = $1 and target_user_id = $2) AS subscribed",
         [jwtid, id]
@@ -101,8 +96,7 @@ class userController {
   }
   async SubscribeUser(req, res) {
     const { id } = req.body;
-    console.log(id);
-    const userId = tokenService.returnPayload(req.cookies.token);
+    const userId = tokenService.returnPayload(req.headers.authorization);
     try {
       await pool.query(
         "INSERT INTO follows (subscriber_id,target_user_id) values ($1,$2)",
@@ -115,7 +109,7 @@ class userController {
   }
   async unSubscribeUser(req, res) {
     const { id } = req.body;
-    const userId = tokenService.returnPayload(req.cookies.token);
+    const userId = tokenService.returnPayload(req.headers.authorization);
     try {
       await pool.query(
         "DELETE FROM follows WHERE subscriber_id = $1 AND target_user_id = $2",
@@ -139,7 +133,7 @@ class userController {
     }
   }
   async updateProfile(req, res) {
-    const id = tokenService.returnPayload(req.cookies.token);
+    const id = tokenService.returnPayload(req.headers.authorization);
     const { name, nickname, description } = req.body;
     let updateQuery = "UPDATE users SET";
     const updateValues = [];
@@ -190,11 +184,8 @@ class userController {
     res.json(response.rows[0]);
   }
   async setPhoto(req, res) {
-    const id = tokenService.returnPayload(req.cookies.token);
+    const id = tokenService.returnPayload(req.headers.authorization);
     const { type } = req.body;
-    console.log(type);
-    console.log(req.files);
-    console.log(req.file);
     try {
       if (req.files) {
         const response = await fileService.setFile(
