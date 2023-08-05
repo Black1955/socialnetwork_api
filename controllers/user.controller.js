@@ -48,10 +48,7 @@ class userController {
           [email, newpassword, nickname]
         );
         const token = tokenService.createToken(id.rows[0].id);
-        res.cookie("token", token, {
-          httpOnly: true,
-        });
-        return res.json({ access: true });
+        return res.json({ access: true, token });
       }
     } catch (error) {
       console.log(error);

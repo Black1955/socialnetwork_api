@@ -11,8 +11,6 @@ export default function tokenMiddleware(req, res, next) {
     req.user = user;
     next();
   } catch (error) {
-    console.log(error);
-
     return next(ApiError.UnautorizedError());
   }
 }
