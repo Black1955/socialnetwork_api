@@ -1,9 +1,6 @@
 import multer from "multer";
 import tokenService from "../services/token.service.js";
 const storage = multer.diskStorage({
-  destination(req, file, cb) {
-    cb(null, "imgStorage");
-  },
   filename(req, file, cb) {
     const type = file.mimetype.replace("image/", ".");
     cb(

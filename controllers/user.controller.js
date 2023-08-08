@@ -63,7 +63,8 @@ class userController {
         [id]
       );
       const token = tokenService.createToken(id);
-      return res.json({ user: profile.rows[0], token });
+      const { policy, signature } = fileService.genereateSycret();
+      return res.json({ user: profile.rows[0], token, policy, signature });
     } catch (error) {
       next(ApiError.BadRequest(error.massage));
     }
@@ -137,18 +138,12 @@ class userController {
     const updateFields = [];
     if (req.files) {
       if (req.files.avatar) {
-        console.log("oleg");
-        await fileService.setFile(
-          id,
-          req.files.avatar[0],
-          "users",
-          "avatar_url"
-        );
+        await fileService.setFile(id, req.files.avatar, "users", "avatar_url");
       }
       if (req.files.background) {
         await fileService.setFile(
           id,
-          req.files.background[0],
+          req.files.background,
           "users",
           "back_url"
         );
@@ -187,7 +182,7 @@ class userController {
       if (req.files) {
         const response = await fileService.setFile(
           id,
-          req.files[type === "avatar_url" ? "avatar" : "background"][0],
+          req.files[type === "avatar_url" ? "avatar" : "background"],
           "users",
           type
         );

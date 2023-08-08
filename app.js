@@ -5,11 +5,8 @@ import { petRouter } from "./routers/pet.router.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import "dotenv/config.js";
-import path from "path";
-import { fileURLToPath } from "url";
+import expressUpload from "express-fileupload";
 import { errorMiddleware } from "./middlewares/error.middleware.js";
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 const app = express();
 const port = process.env.PORT || 5000;
 app.use(
@@ -19,7 +16,7 @@ app.use(
   })
 );
 app.use(json());
-app.use("/imgStorage", express.static(path.join(__dirname, "imgStorage")));
+app.use(expressUpload());
 app.use(cookieParser());
 app.use("/posts", postRouter);
 app.use("/", userRouter);

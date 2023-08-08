@@ -1,6 +1,8 @@
 import pool from "../db.js";
+import fileService from "../services/file.service.js";
 import tokenService from "../services/token.service.js";
 import "dotenv/config.js";
+import fetch from "node-fetch";
 class PostContorller {
   async getUserPosts(req, res) {
     const id = req.query.id;
@@ -20,11 +22,27 @@ class PostContorller {
   async CreateuserPost(req, res) {
     const id = tokenService.returnPayload(req.headers.authorization);
     const { title, description } = req.body;
-    const file = req.file ? req.file.path : null;
+    const { policy, signature } = fileService.genereateSycret();
+    const file = req.files?.post;
+    let responseUrl = "";
     try {
+      if (file) {
+        const fileData = await fetch(
+          `https://www.filestackapi.com/api/store/S3?key=${process.env.FILE_API_KEY}&policy=${policy}&signature=${signature}`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": file.mimetype,
+            },
+            body: file.data,
+          }
+        );
+        const response = await fileData.json();
+        responseUrl = response.url;
+      }
       const data = await pool.query(
         "INSERT INTO posts (title,description, user_id,img_url) values ($1,$2,$3,$4) RETURNING *",
-        [title, description, id, file]
+        [title, description, id, responseUrl.length ? responseUrl : null]
       );
       if (!data.rows.length) {
         res.json("this user doesn`t have any posts");
@@ -107,6 +125,7 @@ class PostContorller {
       return res.json(error);
     }
   }
+
   async dislikePost(req, res) {
     const id = tokenService.returnPayload(req.headers.authorization);
     const { post_id } = req.body;

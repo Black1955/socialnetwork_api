@@ -1,7 +1,7 @@
 import { Router } from "express";
 import userController from "../controllers/user.controller.js";
 import tokenMiddleware from "../middlewares/token.middleware.js";
-import { upload } from "../middlewares/file.middleware.js";
+
 export const userRouter = Router();
 
 userRouter.post("/signin", userController.signin);
@@ -14,19 +14,9 @@ userRouter.post(
   tokenMiddleware,
   userController.unSubscribeUser
 );
-userRouter.put(
-  "/setphoto",
-  tokenMiddleware,
-  upload.fields([{ name: "avatar" }, { name: "background" }]),
-  userController.setPhoto
-);
+userRouter.put("/setphoto", tokenMiddleware, userController.setPhoto);
 userRouter.get("/search", tokenMiddleware, userController.searchUsers);
-userRouter.put(
-  "/updateprofile",
-  tokenMiddleware,
-  upload.fields([{ name: "avatar" }, { name: "background" }]),
-  userController.updateProfile
-);
+userRouter.put("/updateprofile", tokenMiddleware, userController.updateProfile);
 userRouter.get(
   "/recomenduser/:userId",
   tokenMiddleware,
