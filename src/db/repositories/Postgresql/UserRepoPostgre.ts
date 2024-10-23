@@ -46,7 +46,7 @@ export class UserRepoPostgre implements UserRepo {
       throw new Error('there is no user');
     }
   }
-  async search(query: string): Promise<User> {
+  async search(query: string): Promise<User[]> {
     if (!query.length) {
       throw new Error('query is ampty');
     } else {
@@ -54,7 +54,7 @@ export class UserRepoPostgre implements UserRepo {
         const data = await pool.query<User>(
           `SELECT nickname,avatar_url,id FROM users WHERE LOWER(nickname) LIKE '${query}%' OR LOWER(name) LIKE '${query}%'`
         );
-        return data.rows[0];
+        return data.rows;
       } catch (error) {
         console.log(error);
         throw new Error('there is no user');

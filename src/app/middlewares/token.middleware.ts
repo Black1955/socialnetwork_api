@@ -1,10 +1,10 @@
 import jsonwebtoken from 'jsonwebtoken';
 import 'dotenv/config';
-import { ApiError } from '../services/error.service.js';
-import { NextFunction, Response } from 'express';
+import { ApiError } from '../services/ErrorService';
+import { NextFunction, Response, Request } from 'express';
 export default function tokenMiddleware(
-  req: Response,
-  res: Request,
+  req: Request,
+  res: Response,
   next: NextFunction
 ) {
   try {

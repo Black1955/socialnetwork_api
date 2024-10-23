@@ -1,13 +1,25 @@
 import { Router } from 'express';
-import PostContorller from '../controllers/post.controller.js';
+import { appConfig } from '../../configs/appConfig.js';
 import tokenMiddleware from '../middlewares/token.middleware.js';
+import PostMiddleware from '../middlewares/PostMiddleware.js';
 export const postRouter = Router();
-postRouter.get('/', tokenMiddleware, PostContorller.getUserPosts);
-postRouter.post('/create', tokenMiddleware, PostContorller.CreateuserPost);
+postRouter.get(
+  '/',
+  tokenMiddleware,
+  appConfig.postController.Get,
+  PostMiddleware
+);
+postRouter.post(
+  '/create',
+  tokenMiddleware,
+  appConfig.postController.Create,
+  PostMiddleware
+);
 postRouter.get(
   '/recomendposts/:id',
   tokenMiddleware,
-  PostContorller.getRecomendedPosts
+  appConfig.postController.getRecomended,
+  PostMiddleware
 );
-postRouter.post('/like', tokenMiddleware, PostContorller.likePost);
-postRouter.post('/dislike', tokenMiddleware, PostContorller.dislikePost);
+postRouter.post('/like', tokenMiddleware, appConfig.postController.Like);
+postRouter.post('/dislike', tokenMiddleware, appConfig.postController.Dislike);

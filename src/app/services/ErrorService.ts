@@ -12,4 +12,7 @@ export class ApiError extends Error {
   static BadRequest(massage: string, errors = []) {
     return new ApiError(400, massage, errors);
   }
+  static Internal(massage: string) {
+    return new ApiError(500, massage);
+  }
 }

@@ -1,6 +1,6 @@
 import jsonwebtoken from 'jsonwebtoken';
 import 'dotenv/config';
-class tokenService {
+export class TokenService {
   createToken(payload: string) {
     const token = jsonwebtoken.sign({ payload }, process.env.FRASE!, {
       expiresIn: '10h',
@@ -17,5 +17,3 @@ class tokenService {
     return null;
   }
 }
-
-export default new tokenService();

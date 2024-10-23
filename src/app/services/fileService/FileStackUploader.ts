@@ -1,10 +1,10 @@
 import { UploadedFile } from 'express-fileupload';
-import { FileUploader } from './FileUploader';
+import { FileUploader } from '../../../domain/interfaces/FileUploader';
 import crypto from 'crypto';
 import { UploadedFile as ReturnedFile } from '../../../domain/entities/UploadedFile';
 import { File } from './types/File';
 
-class FileStackUploader implements FileUploader {
+export class FileStackUploader implements FileUploader {
   constructor() {}
   private async create(file: File): Promise<string> {
     const { policy, signature } = this.generateSecret();

@@ -1,19 +1,41 @@
 import { RepositoryFactory } from '../factory/RepositoryFactory';
 import { Context } from './strategy/Context';
 import { StrategyMapper } from './strategy/StrategyMaper';
+import { FileService } from './FileSerivce';
+import { File } from '../../app/services/fileService/types/File';
 export class PostService {
   private PostRepo;
-  constructor(Factory: RepositoryFactory) {
+  private FileService;
+  constructor(Factory: RepositoryFactory, fileService: FileService) {
+    this.FileService = fileService;
     this.PostRepo = Factory.CreatePostRepository();
   }
-  create(title: string, description: string, user_id: number, url?: string) {
-    if (!title.length) throw new Error('title is ampty');
+  async create(
+    title: string,
+    user_id: number,
+    description: string,
+    File?: File | File[]
+  ) {
+    if (typeof title !== 'string' || !title.trim()) {
+      throw new Error('Title is empty or not a string');
+    }
+
+    let url: string | undefined;
+
     try {
-      return this.PostRepo.create(title, description, user_id, url);
+      if (File) {
+        const fileToUpload = Array.isArray(File) ? File[0] : File;
+        const file = await this.FileService.upload(fileToUpload);
+        url = Array.isArray(file) ? file[0]?.path : file?.path;
+      }
+
+      return await this.PostRepo.create(title, description, user_id, url);
     } catch (error) {
-      console.log(error);
+      console.error('Error creating post:', error);
+      throw new Error('Failed to create post');
     }
   }
+
   delete(id: number) {
     try {
       return this.PostRepo.delete(id);

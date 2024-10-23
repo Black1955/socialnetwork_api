@@ -1,5 +1,5 @@
 import { randomUUID } from 'crypto';
-import { FileUploader } from './FileUploader';
+import { FileUploader } from '../../../domain/interfaces/FileUploader';
 import { writeFile, rm } from 'fs/promises';
 import { File } from './types/File';
 export class LocalUploader implements FileUploader {

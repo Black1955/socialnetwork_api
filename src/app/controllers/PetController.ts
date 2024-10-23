@@ -1,10 +1,12 @@
+import { TokenService } from './../services/TokenService';
 import { Request, Response } from 'express';
 import pool from '../../configs/db.js';
-import tokenService from '../services/token.service.js';
 
-class petController {
+export class PetController {
+  constructor(private tokenService: TokenService) {}
+
   async createPet(req: Request, res: Response) {
-    const id = tokenService.returnPayload(req.headers.authorization!);
+    const id = this.tokenService.returnPayload(req.headers.authorization!);
     let path = null;
     try {
       const { name } = req.body;
@@ -35,5 +37,3 @@ class petController {
     }
   }
 }
-
-export default new petController();

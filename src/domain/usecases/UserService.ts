@@ -1,18 +1,29 @@
 import bccrypt from 'bcrypt';
 import { RepositoryFactory } from '../factory/RepositoryFactory';
+import { FileService } from './FileSerivce';
 
 export class UserService {
   private UserRepo;
-  private constructor(RepositoryFactory: RepositoryFactory) {
+  private FileService;
+  private constructor(
+    RepositoryFactory: RepositoryFactory,
+    fileService: FileService
+  ) {
     this.UserRepo = RepositoryFactory.CreateUserRepository();
+    this.FileService = fileService;
   }
-  public static getInstance(RepositoryFactory: RepositoryFactory) {
-    return new UserService(RepositoryFactory);
+  public static getInstance(
+    RepositoryFactory: RepositoryFactory,
+    fileService: FileService
+  ) {
+    return new UserService(RepositoryFactory, fileService);
   }
   async create(email: string, password: string, nickname: string) {
     try {
       return await this.UserRepo.create(email, password, nickname);
-    } catch (error) {}
+    } catch (error) {
+      throw error;
+    }
   }
   async isSubscribed(myId: number, user_id: number) {
     try {
@@ -65,4 +76,5 @@ export class UserService {
   async recomend(myId: number) {
     return this.UserRepo.recomend(myId);
   }
+  async setAvatar() {}
 }

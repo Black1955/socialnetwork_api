@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import petsController from '../controllers/pets.controller.js';
-import tokenMiddleware from '../middlewares/token.middleware.js';
+import { appConfig } from '../../configs/appConfig';
+import tokenMiddleware from '../middlewares/token.middleware';
 export const petRouter = Router();
 
-petRouter.get('/get', tokenMiddleware, petsController.getPets);
-petRouter.post('/create', tokenMiddleware, petsController.createPet);
+petRouter.get('/get', tokenMiddleware, appConfig.petController.getPets);
+petRouter.post('/create', tokenMiddleware, appConfig.petController.createPet);
