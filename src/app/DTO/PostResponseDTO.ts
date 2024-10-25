@@ -1,4 +1,4 @@
-import { Post } from '../../domain/entities/Post';
+import { Post } from '../../domain/entities/Post.js';
 
 export class PostResponseDTO {
   private post: Post | Post[];

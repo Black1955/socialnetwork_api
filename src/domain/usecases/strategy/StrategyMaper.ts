@@ -1,10 +1,10 @@
-import { PostRepo } from '../../interfaces/PostRepo';
-import { BlogPostStrategy } from './BlogPostStrategy';
-import { FollowingPostStrategy } from './FollowingPostStrategy';
-import { LikedPostStrategy } from './LikedPostStrategy';
-import { NewPostStrategy } from './NewPostStrategy';
-import { PopularPostStrategy } from './PopularPostStrategy';
-import { PostStrategy } from './PostStrategy';
+import { PostRepo } from '../../interfaces/PostRepo.js';
+import { BlogPostStrategy } from './BlogPostStrategy.js';
+import { FollowingPostStrategy } from './FollowingPostStrategy.js';
+import { LikedPostStrategy } from './LikedPostStrategy.js';
+import { NewPostStrategy } from './NewPostStrategy.js';
+import { PopularPostStrategy } from './PopularPostStrategy.js';
+import { PostStrategy } from './PostStrategy.js';
 
 export function StrategyMapper(type: string, repo: PostRepo): PostStrategy {
   switch (type) {

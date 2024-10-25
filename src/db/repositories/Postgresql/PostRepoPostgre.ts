@@ -1,6 +1,6 @@
-import { Post } from '../../../domain/entities/Post';
-import { PostRepo } from '../../../domain/interfaces/PostRepo';
-import pool from '../../../configs/db';
+import { Post } from '../../../domain/entities/Post.js';
+import { PostRepo } from '../../../domain/interfaces/PostRepo.js';
+import pool from '../../../configs/db.js';
 export class PostRepoPostgre implements PostRepo {
   async getBlogPost(id: number, page: number, limit: number): Promise<Post[]> {
     const res = await pool.query<Post[]>(

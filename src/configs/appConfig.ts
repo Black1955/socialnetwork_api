@@ -1,16 +1,16 @@
 import 'dotenv/config';
-import { LocalUploader } from '../app/services/fileService/LocalUploader';
-import { FileStackUploader } from '../app/services/fileService/FileStackUploader';
-import { FileService } from '../domain/usecases/FileSerivce';
-import { PostgresRepoFactory } from '../domain/factory/PostgresRepoFactory';
-import { PostService } from '../domain/usecases/PostService';
-import { UserService } from '../domain/usecases/UserService';
-import { AuthService } from '../app/services/AuthService';
-import { TokenService } from '../app/services/TokenService';
-import { AuthController } from '../app/controllers/AuthController';
-import { PetController } from '../app/controllers/PetController';
-import { PostContorller } from '../app/controllers/PostController';
-import { UserController } from '../app/controllers/UserController';
+import { LocalUploader } from '../app/services/fileService/LocalUploader.js';
+import { FileStackUploader } from '../app/services/fileService/FileStackUploader.js';
+import { FileService } from '../domain/usecases/FileSerivce.js';
+import { PostgresRepoFactory } from '../domain/factory/PostgresRepoFactory.js';
+import { PostService } from '../domain/usecases/PostService.js';
+import { UserService } from '../domain/usecases/UserService.js';
+import { AuthService } from '../app/services/AuthService.js';
+import { TokenService } from '../app/services/TokenService.js';
+import { AuthController } from '../app/controllers/AuthController.js';
+import { PetController } from '../app/controllers/PetController.js';
+import { PostContorller } from '../app/controllers/PostController.js';
+import { UserController } from '../app/controllers/UserController.js';
 
 class AppConfig {
   // Declare service instances

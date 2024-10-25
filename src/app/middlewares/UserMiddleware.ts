@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { UserResponseDTO } from '../DTO/UserResponseDTO';
+import { UserResponseDTO } from '../DTO/UserResponseDTO.js';
 import crypto from 'crypto';
 
 function generateSecret() {

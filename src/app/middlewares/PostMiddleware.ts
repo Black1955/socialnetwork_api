@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
-import { UserResponseDTO } from '../DTO/UserResponseDTO';
+import { UserResponseDTO } from '../DTO/UserResponseDTO.js';
 import crypto from 'crypto';
-import { PostResponseDTO } from '../DTO/PostResponseDTO';
+import { PostResponseDTO } from '../DTO/PostResponseDTO.js';
 
 function generateSecret() {
   const policyObj = {

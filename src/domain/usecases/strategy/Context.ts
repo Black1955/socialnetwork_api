@@ -1,4 +1,4 @@
-import { PostStrategy } from './PostStrategy';
+import { PostStrategy } from './PostStrategy.js';
 
 export class Context {
   private Stategy: PostStrategy;

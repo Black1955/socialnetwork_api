@@ -1,14 +1,20 @@
-import { TokenService } from '../services/TokenService';
-import { UserService } from '../../domain/usecases/UserService';
-import { ApiError } from '../services/ErrorService';
+import { TokenService } from '../services/TokenService.js';
+import { UserService } from '../../domain/usecases/UserService.js';
+import { ApiError } from '../services/ErrorService.js';
 import { NextFunction, Request, Response } from 'express';
-import { UserResponseDTO } from '../DTO/UserResponseDTO';
+import { UserResponseDTO } from '../DTO/UserResponseDTO.js';
 export class UserController {
   private UserService;
   private tokenService;
   private constructor(UserService: UserService, tokenService: TokenService) {
     this.UserService = UserService;
     this.tokenService = tokenService;
+
+    this.SubscribeUser = this.SubscribeUser.bind(this);
+    this.getRecomendUser = this.getRecomendUser.bind(this);
+    this.getUser = this.getUser.bind(this);
+    this.searchUsers = this.searchUsers.bind(this);
+    this.unSubscribeUser = this.unSubscribeUser.bind(this);
   }
   public static getInstance(
     UserService: UserService,

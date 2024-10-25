@@ -1,6 +1,6 @@
 import bccrypt from 'bcrypt';
-import { RepositoryFactory } from '../factory/RepositoryFactory';
-import { FileService } from './FileSerivce';
+import { RepositoryFactory } from '../factory/RepositoryFactory.js';
+import { FileService } from './FileSerivce.js';
 
 export class UserService {
   private UserRepo;

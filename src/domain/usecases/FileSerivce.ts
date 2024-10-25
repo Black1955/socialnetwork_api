@@ -1,11 +1,13 @@
-import { File } from '../../app/services/fileService/types/File';
-import { FileUpload } from '../interfaces/FileUpload';
-import { FileUploader } from '../interfaces/FileUploader';
+import { File } from '../../app/services/fileService/types/File.js';
+import { FileUpload } from '../interfaces/FileUpload.js';
+import { FileUploader } from '../interfaces/FileUploader.js';
 export class FileService implements FileUpload {
   private uploader;
   constructor(uploader: FileUploader) {
     this.uploader = uploader;
     this.upload = this.upload.bind(this);
+    this.delete = this.delete.bind(this);
+    this.update = this.update.bind(this);
   }
   async upload(file: File | File[]) {
     return this.uploader.upload(file);

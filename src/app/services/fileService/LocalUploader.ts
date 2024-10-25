@@ -1,7 +1,7 @@
 import { randomUUID } from 'crypto';
-import { FileUploader } from '../../../domain/interfaces/FileUploader';
+import { FileUploader } from '../../../domain/interfaces/FileUploader.js';
 import { writeFile, rm } from 'fs/promises';
-import { File } from './types/File';
+import { File } from './types/File.js';
 export class LocalUploader implements FileUploader {
   constructor(private url = process.env.LOCAL_STORAGE_PATH) {}
   async upload(file: File | File[]) {
@@ -14,7 +14,6 @@ export class LocalUploader implements FileUploader {
             return path;
           })
         );
-
         return files.map((path) => ({ path }));
       } else {
         const path = this.generatePath();

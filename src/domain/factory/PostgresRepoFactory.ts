@@ -1,8 +1,8 @@
-import { PostRepo } from '../interfaces/PostRepo';
-import { UserRepo } from '../interfaces/UserRepo';
-import { PostRepoPostgre } from '../../db/repositories/Postgresql/PostRepoPostgre';
-import { UserRepoPostgre } from '../../db/repositories/Postgresql/UserRepoPostgre';
-import { RepositoryFactory } from './RepositoryFactory';
+import { PostRepo } from '../interfaces/PostRepo.js';
+import { UserRepo } from '../interfaces/UserRepo.js';
+import { PostRepoPostgre } from '../../db/repositories/Postgresql/PostRepoPostgre.js';
+import { UserRepoPostgre } from '../../db/repositories/Postgresql/UserRepoPostgre.js';
+import { RepositoryFactory } from './RepositoryFactory.js';
 
 export class PostgresRepoFactory implements RepositoryFactory {
   CreateUserRepository(): UserRepo {

@@ -1,4 +1,4 @@
-import { Post } from '../entities/Post';
+import { Post } from '../entities/Post.js';
 
 export interface PostRepo {
   create(

@@ -1,13 +1,17 @@
 import { NextFunction, Request, Response } from 'express';
-import { AuthService } from '../services/AuthService';
-import { ApiError } from '../services/ErrorService';
-import { TokenService } from '../services/TokenService';
+import { AuthService } from '../services/AuthService.js';
+import { ApiError } from '../services/ErrorService.js';
+import { TokenService } from '../services/TokenService.js';
 
 export class AuthController {
   constructor(
     private AuthService: AuthService,
     private tokenService: TokenService
-  ) {}
+  ) {
+    this.signup = this.signup.bind(this);
+    this.refresh = this.refresh.bind(this);
+    this.signin = this.signin.bind(this);
+  }
 
   public async signup(req: Request, res: Response, next: NextFunction) {
     const { password, email, nickname } = req.body;

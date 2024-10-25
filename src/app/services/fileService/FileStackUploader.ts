@@ -1,8 +1,7 @@
-import { UploadedFile } from 'express-fileupload';
-import { FileUploader } from '../../../domain/interfaces/FileUploader';
+import { FileUploader } from '../../../domain/interfaces/FileUploader.js';
 import crypto from 'crypto';
-import { UploadedFile as ReturnedFile } from '../../../domain/entities/UploadedFile';
-import { File } from './types/File';
+import { UploadedFile as ReturnedFile } from '../../../domain/entities/UploadedFile.js';
+import { File } from './types/File.js';
 
 export class FileStackUploader implements FileUploader {
   constructor() {}
@@ -38,7 +37,7 @@ export class FileStackUploader implements FileUploader {
     }
   }
 
-  async update(url: string, file: UploadedFile) {
+  async update(url: string, file: File) {
     const { policy, signature } = this.generateSecret();
     const fileKey = url.split('com/').pop();
     const response = await fetch(

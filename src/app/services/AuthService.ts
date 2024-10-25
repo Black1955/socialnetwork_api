@@ -1,6 +1,6 @@
-import { UserService } from './../../domain/usecases/UserService';
-import { ApiError } from './ErrorService';
-import { TokenService } from './TokenService';
+import { UserService } from './../../domain/usecases/UserService.js';
+import { ApiError } from './ErrorService.js';
+import { TokenService } from './TokenService.js';
 import bccrypt from 'bcrypt';
 export class AuthService {
   constructor(
@@ -32,6 +32,7 @@ export class AuthService {
       const token = this.tokenService.createToken(id);
       return { user, token };
     } catch (error) {
+      console.log(error);
       throw error;
     }
   }

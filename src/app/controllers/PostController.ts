@@ -1,13 +1,20 @@
-import { TokenService } from '../services/TokenService';
+import { TokenService } from '../services/TokenService.js';
 import 'dotenv/config.js';
 import { NextFunction, Request, Response } from 'express';
 import { PostService } from '../../domain/usecases/PostService.js';
-import { PostResponseDTO } from '../DTO/PostResponseDTO';
+import { PostResponseDTO } from '../DTO/PostResponseDTO.js';
 export class PostContorller {
   constructor(
     private postService: PostService,
     private tokenService: TokenService
-  ) {}
+  ) {
+    this.Create = this.Create.bind(this);
+    this.Dislike = this.Dislike.bind(this);
+    this.Get = this.Get.bind(this);
+    this.Like = this.Like.bind(this);
+    this.Upload = this.Upload.bind(this);
+    this.getRecomended = this.getRecomended.bind(this);
+  }
   async Get(req: Request, res: Response, next: NextFunction) {
     const id = req.query.id;
     try {

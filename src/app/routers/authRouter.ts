@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { appConfig } from '../../configs/appConfig';
-import tokenMiddleware from '../middlewares/token.middleware';
+import { appConfig } from '../../configs/appConfig.js';
+import tokenMiddleware from '../middlewares/token.middleware.js';
 export const authRouter = Router();
 
 authRouter.post('/signin', appConfig.authController.signin);

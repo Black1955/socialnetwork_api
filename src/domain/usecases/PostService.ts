@@ -1,8 +1,8 @@
-import { RepositoryFactory } from '../factory/RepositoryFactory';
-import { Context } from './strategy/Context';
-import { StrategyMapper } from './strategy/StrategyMaper';
-import { FileService } from './FileSerivce';
-import { File } from '../../app/services/fileService/types/File';
+import { RepositoryFactory } from '../factory/RepositoryFactory.js';
+import { Context } from './strategy/Context.js';
+import { StrategyMapper } from './strategy/StrategyMaper.js';
+import { FileService } from './FileSerivce.js';
+import { File } from '../../app/services/fileService/types/File.js';
 export class PostService {
   private PostRepo;
   private FileService;

@@ -1,6 +1,6 @@
-import { Post } from '../../entities/Post';
-import { PostRepo } from '../../interfaces/PostRepo';
-import { PostStrategy } from './PostStrategy';
+import { Post } from '../../entities/Post.js';
+import { PostRepo } from '../../interfaces/PostRepo.js';
+import { PostStrategy } from './PostStrategy.js';
 
 export class NewPostStrategy implements PostStrategy {
   private repo;

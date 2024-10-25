@@ -1,6 +1,6 @@
-import { UserRepo } from '../../../domain/interfaces/UserRepo';
-import pool from '../../../configs/db';
-import { User } from '../../../domain/entities/User';
+import { UserRepo } from '../../../domain/interfaces/UserRepo.js';
+import pool from '../../../configs/db.js';
+import { User } from '../../../domain/entities/User.js';
 export class UserRepoPostgre implements UserRepo {
   async create(
     email: string,
@@ -51,10 +51,10 @@ export class UserRepoPostgre implements UserRepo {
       throw new Error('query is ampty');
     } else {
       try {
-        const data = await pool.query<User>(
+        const data = await pool.query<User[]>(
           `SELECT nickname,avatar_url,id FROM users WHERE LOWER(nickname) LIKE '${query}%' OR LOWER(name) LIKE '${query}%'`
         );
-        return data.rows;
+        return data.rows[0];
       } catch (error) {
         console.log(error);
         throw new Error('there is no user');
