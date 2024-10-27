@@ -9,40 +9,40 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import pool from '../../../configs/db.js';
 export class PostRepoPostgre {
-    getBlogPost(id, page, limit) {
+    getBlogPost(id, page, limit, myId) {
         return __awaiter(this, void 0, void 0, function* () {
-            const res = yield pool.query('SELECT * FROM blogposts($1,$2,$3,$4)', [id, limit, page]);
-            return res.rows[0];
+            const res = yield pool.query('select P.*, U.nickname, U.avatar_url from (SELECT * FROM blogposts($1,$2,$3,$4) ) as P inner join users U on P.user_id = U.id', [id, myId, limit, page]);
+            return res.rows;
         });
     }
     getFollowingPost(id, page, limit) {
         return __awaiter(this, void 0, void 0, function* () {
-            const res = yield pool.query('SELECT * FROM followsposts($1,$2,$3)', [id, limit, page]);
-            return res.rows[0];
+            const res = yield pool.query('select P.*, U.nickname, U.avatar_url from (SELECT * FROM followsposts($1,$2,$3) ) as P inner join users U on P.user_id = U.id', [id, limit, page]);
+            return res.rows;
         });
     }
-    getLikedPost(id, page, limit) {
+    getLikedPost(id, page, limit, myId) {
         return __awaiter(this, void 0, void 0, function* () {
-            const res = yield pool.query('SELECT * FROM likedPosts($1,$2,$3,$4)', [id, limit, page]);
-            return res.rows[0];
+            const res = yield pool.query('select P.*, U.nickname, U.avatar_url from (SELECT * FROM likedPosts($1,$2,$3,$4) ) as P inner join users U on P.user_id = U.id', [id, myId, limit, page]);
+            return res.rows;
         });
     }
-    getNewPost(id, page, limit) {
+    getNewPost(id, page, limit, myId) {
         return __awaiter(this, void 0, void 0, function* () {
-            const res = yield pool.query('SELECT * from newposts($1,$2,$3,$4)', [id, limit, page]);
-            return res.rows[0];
+            const res = yield pool.query('select P.*, U.nickname, U.avatar_url from (SELECT * from newposts($1,$2,$3,$4) ) as P inner join users U on P.user_id = U.id', [id, myId, limit, page]);
+            return res.rows;
         });
     }
     getPopularPost(id, page, limit, myId) {
         return __awaiter(this, void 0, void 0, function* () {
-            const res = yield pool.query('select * from popularblog($1,$2,$3)', [id, limit, page]);
-            return res.rows[0];
+            const res = yield pool.query('select P.*, U.nickname, U.avatar_url from (select * from popularblog($1,$2,$3)) as P inner join users U on P.user_id = U.id', [myId, limit, page]);
+            return res.rows;
         });
     }
     create(title, description, user_id, url) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const res = yield pool.query('INSERT INTO posts (title,description, user_id,img_url) values ($1,$2,$3,$4) RETURNING *', [title, description, user_id, url.length ? url : null]);
+                const res = yield pool.query('INSERT INTO posts (title,description, user_id,img_url) values ($1,$2,$3,$4) RETURNING *', [title, description, user_id, url ? url : null]);
                 return res.rows[0];
             }
             catch (error) {
@@ -67,7 +67,8 @@ export class PostRepoPostgre {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const res = yield pool.query('SELECT * FROM posts WHERE user_id = $1', [id]);
-                return res.rows[0];
+                console.log(res.rows);
+                return res.rows;
             }
             catch (error) {
                 console.log(error);

@@ -81,17 +81,17 @@ export class UserService {
     }
     subcsribe(myId, userId) {
         return __awaiter(this, void 0, void 0, function* () {
-            return this.UserRepo.subscribe(myId, userId);
+            return yield this.UserRepo.subscribe(myId, userId);
         });
     }
     unsubcsribe(myId, userId) {
         return __awaiter(this, void 0, void 0, function* () {
-            return this.UserRepo.unSubscribe(myId, userId);
+            return yield this.UserRepo.unSubscribe(myId, userId);
         });
     }
     recomend(myId) {
         return __awaiter(this, void 0, void 0, function* () {
-            return this.UserRepo.recomend(myId);
+            return yield this.UserRepo.recomend(myId);
         });
     }
     setAvatar() {

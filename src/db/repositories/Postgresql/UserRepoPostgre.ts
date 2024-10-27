@@ -25,7 +25,7 @@ export class UserRepoPostgre implements UserRepo {
   async findByEmail(email: string): Promise<User> {
     try {
       const data = await pool.query<User>(
-        'SELECT id, nickname, name, description, followers, following, avatar_url, back_url, email FROM users WHERE email = $1',
+        'SELECT id, nickname, name, description, followers, following, avatar_url, back_url, email,password FROM users WHERE email = $1',
         [email]
       );
       return data.rows[0];
@@ -51,10 +51,10 @@ export class UserRepoPostgre implements UserRepo {
       throw new Error('query is ampty');
     } else {
       try {
-        const data = await pool.query<User[]>(
+        const data = await pool.query<User>(
           `SELECT nickname,avatar_url,id FROM users WHERE LOWER(nickname) LIKE '${query}%' OR LOWER(name) LIKE '${query}%'`
         );
-        return data.rows[0];
+        return data.rows;
       } catch (error) {
         console.log(error);
         throw new Error('there is no user');
@@ -102,11 +102,10 @@ export class UserRepoPostgre implements UserRepo {
   }
   async recomend(id: number): Promise<User[]> {
     try {
-      const users = await pool.query<User[]>(
-        'SELECT * from recomendusers($1)',
-        [id]
-      );
-      return users.rows[0];
+      const users = await pool.query<User>('SELECT * from recomendusers($1)', [
+        id,
+      ]);
+      return users.rows;
     } catch (error) {
       console.log(error);
       throw new Error('');

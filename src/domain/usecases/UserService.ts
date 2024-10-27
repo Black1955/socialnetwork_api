@@ -53,7 +53,6 @@ export class UserService {
   }
   async validate(email: string, password: string) {
     const user = await this.UserRepo.findByEmail(email);
-
     if (user.password.length < 0) {
       throw new Error('incorrect email or password');
     }
@@ -61,20 +60,19 @@ export class UserService {
       password.toString(),
       user.password
     );
-
     if (!isPasswordValid) {
       throw new Error('incorrect email or password');
     }
     return user;
   }
   async subcsribe(myId: number, userId: number) {
-    return this.UserRepo.subscribe(myId, userId);
+    return await this.UserRepo.subscribe(myId, userId);
   }
   async unsubcsribe(myId: number, userId: number) {
-    return this.UserRepo.unSubscribe(myId, userId);
+    return await this.UserRepo.unSubscribe(myId, userId);
   }
   async recomend(myId: number) {
-    return this.UserRepo.recomend(myId);
+    return await this.UserRepo.recomend(myId);
   }
   async setAvatar() {}
 }

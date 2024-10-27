@@ -1,8 +1,9 @@
 import jsonwebtoken from 'jsonwebtoken';
 import 'dotenv/config';
+import { TOKEN } from '../../configs/checkENV.js';
 export class TokenService {
     createToken(payload) {
-        const token = jsonwebtoken.sign({ payload }, process.env.FRASE, {
+        const token = jsonwebtoken.sign({ payload }, TOKEN, {
             expiresIn: '10h',
         });
         return token;

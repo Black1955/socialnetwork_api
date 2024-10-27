@@ -1,5 +1,6 @@
 import crypto from 'crypto';
 import { PostResponseDTO } from '../DTO/PostResponseDTO.js';
+import { FILESTACK } from '../../configs/checkENV.js';
 function generateSecret() {
     const policyObj = {
         expiry: Date.now() + 36000,
@@ -19,7 +20,7 @@ function generateSecret() {
     const policyString = JSON.stringify(policyObj);
     const policy = Buffer.from(policyString).toString('base64');
     const signature = crypto
-        .createHmac('sha256', process.env.SECRET_FILE)
+        .createHmac('sha256', FILESTACK.FILESTACK_SECRET_FILE)
         .update(policy)
         .digest('hex');
     return { policy, signature };
@@ -34,7 +35,9 @@ export default function PostMiddleware(req, res, next) {
                 const post = response.getPost();
                 const { policy, signature } = generateSecret();
                 if (Array.isArray(post)) {
-                    const posts = post.map((post) => (Object.assign(Object.assign({}, post), { img_url: post.img_url + `?policy=${policy}&signature=${signature}` })));
+                    const posts = post.map((post) => (Object.assign(Object.assign({}, post), { img_url: post.img_url
+                            ? post.img_url + `?policy=${policy}&signature=${signature}`
+                            : post.img_url })));
                     response.setPost(posts);
                 }
                 else {

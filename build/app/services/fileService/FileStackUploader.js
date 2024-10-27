@@ -8,12 +8,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import crypto from 'crypto';
+import { FILESTACK } from '../../../configs/checkENV.js';
 export class FileStackUploader {
     constructor() { }
     create(file) {
         return __awaiter(this, void 0, void 0, function* () {
             const { policy, signature } = this.generateSecret();
-            const response = yield fetch(`https://www.filestackapi.com/api/store/S3?key=${process.env.FILE_API_KEY}&policy=${policy}&signature=${signature}`, {
+            const response = yield fetch(`https://www.filestackapi.com/api/store/S3?key=${FILESTACK.FILESTACK_API_KEY}&policy=${policy}&signature=${signature}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': file.mimetype,
@@ -90,7 +91,7 @@ export class FileStackUploader {
         const policyString = JSON.stringify(policyObj);
         const policy = Buffer.from(policyString).toString('base64');
         const signature = crypto
-            .createHmac('sha256', process.env.SECRET_FILE)
+            .createHmac('sha256', FILESTACK.FILESTACK_SECRET_FILE)
             .update(policy)
             .digest('hex');
         return { policy, signature };

@@ -11,6 +11,8 @@ import pool from '../../configs/db.js';
 export class PetController {
     constructor(tokenService) {
         this.tokenService = tokenService;
+        this.createPet = this.createPet.bind(this);
+        this.getPets = this.getPets.bind(this);
     }
     createPet(req, res) {
         return __awaiter(this, void 0, void 0, function* () {

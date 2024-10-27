@@ -37,7 +37,6 @@ export class UserController {
       res.locals.apiResponse = response;
       next();
     } catch (error) {
-      console.log(error);
       res.status(400).json({ error });
     }
   }
@@ -67,6 +66,7 @@ export class UserController {
     const { userId } = req.params;
     try {
       const users = await this.UserService.recomend(+userId);
+      console.log(users);
       return res.json(users);
     } catch (error) {
       console.log(error);
@@ -77,7 +77,7 @@ export class UserController {
     try {
       const { query } = req.query;
       if (query && query.length) {
-        const users = this.UserService.search(String(query));
+        const users = await this.UserService.search(String(query));
         return res.json(users);
       } else {
         return res.json([]);

@@ -12,13 +12,17 @@ export class AuthController {
     constructor(AuthService, tokenService) {
         this.AuthService = AuthService;
         this.tokenService = tokenService;
+        this.signup = this.signup.bind(this);
+        this.refresh = this.refresh.bind(this);
+        this.signin = this.signin.bind(this);
     }
     signup(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             const { password, email, nickname } = req.body;
             try {
                 const token = yield this.AuthService.signup(password, email, nickname);
-                return { access: true, token };
+                console.log('AuthController signup token', token);
+                return res.json({ access: true, token });
             }
             catch (error) {
                 if (error instanceof ApiError) {
@@ -35,7 +39,7 @@ export class AuthController {
             const { password, email } = req.body;
             try {
                 const token = yield this.AuthService.signin(password, email);
-                return { access: true, token };
+                return res.json({ access: true, token });
             }
             catch (error) {
                 if (error instanceof ApiError) {

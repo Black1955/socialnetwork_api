@@ -2,6 +2,7 @@ import jsonwebtoken from 'jsonwebtoken';
 import 'dotenv/config';
 import { ApiError } from '../services/ErrorService.js';
 import { NextFunction, Response, Request } from 'express';
+import { TOKEN } from '../../configs/checkENV.js';
 export default function tokenMiddleware(
   req: Request,
   res: Response,
@@ -13,7 +14,7 @@ export default function tokenMiddleware(
     if (!token) {
       return next(ApiError.UnautorizedError());
     }
-    const user = jsonwebtoken.verify(token, process.env.FRASE!);
+    const user = jsonwebtoken.verify(token, TOKEN!);
     //@ts-ignore
     req.user = user;
     next();

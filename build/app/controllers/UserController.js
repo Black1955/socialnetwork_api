@@ -12,6 +12,11 @@ export class UserController {
     constructor(UserService, tokenService) {
         this.UserService = UserService;
         this.tokenService = tokenService;
+        this.SubscribeUser = this.SubscribeUser.bind(this);
+        this.getRecomendUser = this.getRecomendUser.bind(this);
+        this.getUser = this.getUser.bind(this);
+        this.searchUsers = this.searchUsers.bind(this);
+        this.unSubscribeUser = this.unSubscribeUser.bind(this);
     }
     static getInstance(UserService, tokenService) {
         return new UserController(UserService, tokenService);
@@ -33,7 +38,6 @@ export class UserController {
                 next();
             }
             catch (error) {
-                console.log(error);
                 res.status(400).json({ error });
             }
         });
@@ -71,6 +75,7 @@ export class UserController {
             const { userId } = req.params;
             try {
                 const users = yield this.UserService.recomend(+userId);
+                console.log(users);
                 return res.json(users);
             }
             catch (error) {
@@ -84,7 +89,7 @@ export class UserController {
             try {
                 const { query } = req.query;
                 if (query && query.length) {
-                    const users = this.UserService.search(String(query));
+                    const users = yield this.UserService.search(String(query));
                     return res.json(users);
                 }
                 else {

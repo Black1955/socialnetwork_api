@@ -13,7 +13,7 @@ export class AuthService {
       const token = this.tokenService.createToken(String(user.id));
       return token;
     } catch (error) {
-      throw ApiError.BadRequest("'uncorrect password or email'");
+      throw ApiError.BadRequest('incorrect email or password');
     }
   }
   public async signup(password: string, email: string, nickname: string) {

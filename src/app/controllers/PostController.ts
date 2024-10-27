@@ -1,8 +1,8 @@
 import { TokenService } from '../services/TokenService.js';
-import 'dotenv/config.js';
 import { NextFunction, Request, Response } from 'express';
 import { PostService } from '../../domain/usecases/PostService.js';
 import { PostResponseDTO } from '../DTO/PostResponseDTO.js';
+import { ApiError } from '../services/ErrorService.js';
 export class PostContorller {
   constructor(
     private postService: PostService,
@@ -20,8 +20,7 @@ export class PostContorller {
     try {
       const posts = await this.postService.getUserPosts(Number(id));
       if (!posts.length) {
-        res.json('this user doesn`t have any posts');
-        return;
+        return res.json('this user doesn`t have any posts');
       }
       const response = new PostResponseDTO(posts);
       res.locals.apiResponse = response;
@@ -32,10 +31,16 @@ export class PostContorller {
   }
   async Create(req: Request, res: Response, next: NextFunction) {
     const id = this.tokenService.returnPayload(req.headers.authorization!);
+    const userId = parseInt(id, 10);
     const { title, description } = req.body;
     const file = req.files?.post;
     try {
-      const post = await this.postService.create(title, description, id, file);
+      const post = await this.postService.create(
+        title,
+        userId,
+        description,
+        file
+      );
       const response = new PostResponseDTO(post);
       res.locals.apiResponse = response;
       next();
@@ -49,7 +54,11 @@ export class PostContorller {
       const { id } = req.params;
       const myId = this.tokenService.returnPayload(req.headers.authorization!);
       const { page, limit, type } = req.query;
-
+      if (!page || !limit || !type) {
+        next(
+          ApiError.BadRequest('missing following parameters: page,limit,type')
+        );
+      }
       const posts = await this.postService.getPosts(
         Number(id),
         Number(page),
@@ -57,6 +66,7 @@ export class PostContorller {
         Number(myId),
         String(type)
       );
+      console.log(posts);
       const response = new PostResponseDTO(posts!);
       res.locals.apiResponse = response;
       next();

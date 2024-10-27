@@ -50,6 +50,7 @@ export class PostService {
     getPosts(id, page, limit, myId, type) {
         try {
             const strategy = StrategyMapper(type, this.PostRepo);
+            console.log('strategy', strategy);
             const context = new Context(strategy);
             return context.execute(id, page, limit, myId);
         }

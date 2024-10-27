@@ -4,5 +4,5 @@ import tokenMiddleware from '../middlewares/token.middleware.js';
 export const authRouter = Router();
 
 authRouter.post('/signin', appConfig.authController.signin);
-authRouter.post('signup', appConfig.authController.signup);
+authRouter.post('/signup', appConfig.authController.signup);
 authRouter.get('/refresh', tokenMiddleware, appConfig.authController.refresh);

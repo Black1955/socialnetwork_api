@@ -3,3 +3,5 @@
 imgStorage/*
 postgres.sql
 .vscode
+/build
+/files

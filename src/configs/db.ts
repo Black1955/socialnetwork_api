@@ -1,13 +1,13 @@
 import pkg from 'pg';
-import 'dotenv/config';
+import { DB } from './checkENV.js';
 const { Pool } = pkg;
 
 const pool = new Pool({
-  user: process.env.USER_DB,
-  password: process.env.PASSWORD_DB,
-  host: process.env.HOST_DB,
-  port: +process.env.PORT_DB!,
-  database: process.env.DATABASE,
+  user: DB.USER_DB,
+  password: DB.DB_PASSWORD,
+  host: DB.DB_HOST,
+  port: +DB.DB_PORT!,
+  database: DB.DATABASE,
 });
 
 export default pool;

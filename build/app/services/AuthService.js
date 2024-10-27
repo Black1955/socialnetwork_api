@@ -22,7 +22,7 @@ export class AuthService {
                 return token;
             }
             catch (error) {
-                throw ApiError.BadRequest("'uncorrect password or email'");
+                throw ApiError.BadRequest('incorrect email or password');
             }
         });
     }

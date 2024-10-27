@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { UserResponseDTO } from '../DTO/UserResponseDTO.js';
 import crypto from 'crypto';
 import { PostResponseDTO } from '../DTO/PostResponseDTO.js';
-
+import { FILESTACK } from '../../configs/checkENV.js';
 function generateSecret() {
   const policyObj = {
     expiry: Date.now() + 36000,
@@ -22,7 +22,7 @@ function generateSecret() {
   const policyString = JSON.stringify(policyObj);
   const policy = Buffer.from(policyString).toString('base64');
   const signature = crypto
-    .createHmac('sha256', process.env.SECRET_FILE!)
+    .createHmac('sha256', FILESTACK.FILESTACK_SECRET_FILE!)
     .update(policy)
     .digest('hex');
   return { policy, signature };
@@ -43,7 +43,9 @@ export default function PostMiddleware(
         if (Array.isArray(post)) {
           const posts = post.map((post) => ({
             ...post,
-            img_url: post.img_url + `?policy=${policy}&signature=${signature}`,
+            img_url: post.img_url
+              ? post.img_url + `?policy=${policy}&signature=${signature}`
+              : post.img_url,
           }));
           response.setPost(posts);
         } else {

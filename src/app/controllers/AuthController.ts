@@ -17,7 +17,8 @@ export class AuthController {
     const { password, email, nickname } = req.body;
     try {
       const token = await this.AuthService.signup(password, email, nickname);
-      return { access: true, token };
+      console.log('AuthController signup token', token);
+      return res.json({ access: true, token });
     } catch (error) {
       if (error instanceof ApiError) {
         return next(error);
@@ -30,7 +31,7 @@ export class AuthController {
     const { password, email } = req.body;
     try {
       const token = await this.AuthService.signin(password, email);
-      return { access: true, token };
+      return res.json({ access: true, token });
     } catch (error) {
       if (error instanceof ApiError) {
         return next(error);

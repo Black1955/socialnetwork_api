@@ -11,6 +11,8 @@ export class FileService {
     constructor(uploader) {
         this.uploader = uploader;
         this.upload = this.upload.bind(this);
+        this.delete = this.delete.bind(this);
+        this.update = this.update.bind(this);
     }
     upload(file) {
         return __awaiter(this, void 0, void 0, function* () {
