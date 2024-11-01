@@ -10,10 +10,7 @@ const DB_HOST = process.env.DB_HOST;
 const DATABASE = process.env.DATABASE;
 const FILESTACK_API_KEY = process.env.FILESTACK_API_KEY;
 const FILESTACK_SECRET_FILE = process.env.SECRET_FILE;
-export const LOCAL_STORAGE_PATH = path.join(
-  process.cwd(),
-  process.env.LOCAL_STORAGE_PATH!
-);
+export const LOCAL_STORAGE_PATH = process.env.LOCAL_STORAGE_PATH!;
 export const ORIGIN = process.env.ORIGIN;
 
 export const FILESTACK = {

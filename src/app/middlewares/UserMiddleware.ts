@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { UserResponseDTO } from '../DTO/UserResponseDTO.js';
-import { FILESTACK } from '../../configs/checkENV.js';
+import { FILESTACK, LOCAL_STORAGE_PATH } from '../../configs/checkENV.js';
 import crypto from 'crypto';
 
 function generateSecret() {
@@ -38,17 +38,34 @@ export default function UserMiddleware(
       const apiResponse = res.locals.apiResponse;
       if (apiResponse instanceof UserResponseDTO) {
         const response = apiResponse as UserResponseDTO;
-        const user = response.getUser();
-        const { policy, signature } = generateSecret();
-        if (user.avatar_url.length > 0) {
-          user.avatar_url =
-            user.avatar_url + `?policy=${policy}&signature=${signature}`;
+        if (FILESTACK.FILESTACK_API_KEY) {
+          const user = response.getUser();
+          const { policy, signature } = generateSecret();
+          if (user.avatar_url.length > 0) {
+            user.avatar_url =
+              user.avatar_url + `?policy=${policy}&signature=${signature}`;
+          }
+          if (user.back_url.length > 0) {
+            user.back_url =
+              user.back_url + `?policy=${policy}&signature=${signature}`;
+          }
+          response.setUser(user);
+        } else {
+          const user = response.getUser();
+          if (user.avatar_url && user.avatar_url.length > 0) {
+            user.avatar_url =
+              `${req.protocol}://` +
+              `${req.headers.host}${LOCAL_STORAGE_PATH}/` +
+              user.avatar_url;
+          }
+          if (user.back_url && user.back_url.length > 0) {
+            user.back_url =
+              `${req.protocol}://` +
+              `${req.headers.host}${LOCAL_STORAGE_PATH}/` +
+              user.back_url;
+          }
+          response.setUser(user);
         }
-        if (user.back_url.length > 0) {
-          user.back_url =
-            user.back_url + `?policy=${policy}&signature=${signature}`;
-        }
-        response.setUser(user);
         return res.status(200).json(response.getObject());
       }
       return res.status(200).json(res.locals.apiResponse);

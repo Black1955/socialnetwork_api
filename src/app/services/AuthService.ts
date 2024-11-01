@@ -17,7 +17,9 @@ export class AuthService {
     }
   }
   public async signup(password: string, email: string, nickname: string) {
+    console.log('authservice');
     const user = await this.userService.findByEmail(email);
+    console.log(user);
     if (user) {
       throw new ApiError(400, 'the user already exists');
     }

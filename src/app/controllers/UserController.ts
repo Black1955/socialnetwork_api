@@ -25,7 +25,7 @@ export class UserController {
   async getUser(req: Request, res: Response, next: NextFunction) {
     const userId = req.params.id;
     try {
-      const user = await this.UserService.findById(Number(userId));
+      const user = await this.UserService.findById(+userId);
       if (!user) {
         res.json({ error: 'user doesn`t exist' });
         return;
@@ -34,6 +34,7 @@ export class UserController {
       const jwtid = this.tokenService.returnPayload(req.headers.authorization!);
       const checkfollow = await this.UserService.isSubscribed(jwtid, id);
       const response = new UserResponseDTO(user, checkfollow?.subscribed!);
+      console.log('response', response);
       res.locals.apiResponse = response;
       next();
     } catch (error) {

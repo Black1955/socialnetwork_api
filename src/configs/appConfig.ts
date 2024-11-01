@@ -11,6 +11,7 @@ import { AuthController } from '../app/controllers/AuthController.js';
 import { PetController } from '../app/controllers/PetController.js';
 import { PostContorller } from '../app/controllers/PostController.js';
 import { UserController } from '../app/controllers/UserController.js';
+import { FILESTACK } from './checkENV.js';
 
 class AppConfig {
   // Declare service instances
@@ -35,7 +36,7 @@ class AppConfig {
     this.postgresRepoFactory = new PostgresRepoFactory();
 
     // Uploader selection based on environment variable
-    if (process.env.USE_FILESTACK === 'true' && process.env.FILESTACK_API_KEY) {
+    if (FILESTACK.FILESTACK_API_KEY && FILESTACK.FILESTACK_SECRET_FILE) {
       this.uploader = new FileStackUploader();
       console.log('Using FileStackUploader');
     } else {

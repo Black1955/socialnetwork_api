@@ -7,8 +7,12 @@ import cors from 'cors';
 import expressUpload from 'express-fileupload';
 import { errorMiddleware } from './app/middlewares/error.middleware.js';
 import { authRouter } from './app/routers/authRouter.js';
-import { ORIGIN, PORT } from './configs/checkENV.js';
+import { ORIGIN, PORT, LOCAL_STORAGE_PATH } from './configs/checkENV.js';
+import path from 'path';
+import { fileURLToPath } from 'url';
 const app = express();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 app.use(
   cors({
     credentials: true,
@@ -18,6 +22,10 @@ app.use(
 app.use(json());
 app.use(expressUpload());
 app.use(cookieParser());
+app.use(
+  `${LOCAL_STORAGE_PATH}`,
+  express.static(path.join(__dirname, `..${LOCAL_STORAGE_PATH}`))
+);
 app.use('/post', postRouter);
 app.use('/', userRouter);
 app.use('/pet', petRouter);

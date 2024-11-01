@@ -78,9 +78,11 @@ export class PostContorller {
   async Like(req: Request, res: Response) {
     const id = this.tokenService.returnPayload(req.headers.authorization!);
     const { post_id } = req.body;
+    const userId = parseInt(id, 10);
+    const postId = parseInt(post_id, 10);
     try {
-      await this.postService.like(Number(id), Number(post_id));
-      const likes = await this.postService.getLikes(id);
+      await this.postService.like(userId, postId);
+      const likes = await this.postService.getLikes(postId);
       return res.json(likes);
     } catch (error) {
       console.log(error);
@@ -93,7 +95,7 @@ export class PostContorller {
     const { post_id } = req.body;
     try {
       await this.postService.disLike(Number(id), Number(post_id));
-      const likes = await this.postService.getLikes(id);
+      const likes = await this.postService.getLikes(post_id);
       return res.json(likes);
     } catch (error) {
       return res.json(error);

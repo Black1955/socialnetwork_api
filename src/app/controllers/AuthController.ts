@@ -17,7 +17,6 @@ export class AuthController {
     const { password, email, nickname } = req.body;
     try {
       const token = await this.AuthService.signup(password, email, nickname);
-      console.log('AuthController signup token', token);
       return res.json({ access: true, token });
     } catch (error) {
       if (error instanceof ApiError) {

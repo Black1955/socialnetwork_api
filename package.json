@@ -5,7 +5,8 @@
   "type": "module",
   "main": "src/app.ts",
   "scripts": {
-    "start": "npm run build && node build/app.js",
+    "start": "node build/app.js",
+    "faststart": "npm run build && node build/app.js",
     "build": "rimraf build/ && tsc",
     "dev": "node --no-warnings=ExperimentalWarning --loader ts-node/esm src/app.ts"
   },

@@ -113,8 +113,10 @@ export class PostRepoPostgre implements PostRepo {
   }
   async like(id: number, post_id: number): Promise<boolean> {
     try {
-      await pool.query('INSERT INTO likes (user_id,post_id) values ($1,$2)'),
-        [id, post_id];
+      await pool.query('INSERT INTO likes (user_id, post_id) VALUES ($1, $2)', [
+        id,
+        post_id,
+      ]);
       return true;
     } catch (error) {
       console.log(error);
